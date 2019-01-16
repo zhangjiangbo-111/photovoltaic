@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fwzx.photovoltaicdatacollect.dao.WindActSDataMapper">
+  <resultMap id="BaseResultMap" type="com.fwzx.photovoltaicdatacollect.pojo.WindActSData">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="get_time" jdbcType="TIMESTAMP" property="getTime" />
+    <result column="angle" jdbcType="DOUBLE" property="angle" />
+    <result column="voltage1" jdbcType="DOUBLE" property="voltage1" />
+    <result column="voltage2" jdbcType="DOUBLE" property="voltage2" />
+    <result column="voltage3" jdbcType="DOUBLE" property="voltage3" />
+    <result column="current1" jdbcType="DOUBLE" property="current1" />
+    <result column="current2" jdbcType="DOUBLE" property="current2" />
+    <result column="current3" jdbcType="DOUBLE" property="current3" />
+    <result column="tempe" jdbcType="DOUBLE" property="tempe" />
+    <result column="wind" jdbcType="DOUBLE" property="wind" />
+    <result column="direction" jdbcType="DOUBLE" property="direction" />
+    <result column="power" jdbcType="DOUBLE" property="power" />
+    <result column="nopower" jdbcType="DOUBLE" property="nopower" />
+    <result column="windspeed" jdbcType="DOUBLE" property="windspeed" />
+    <result column="motorspeed" jdbcType="DOUBLE" property="motorspeed" />
+    <result column="frequency" jdbcType="DOUBLE" property="frequency" />
+    <result column="electric" jdbcType="DOUBLE" property="electric" />
+    <result column="factor" jdbcType="DOUBLE" property="factor" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, get_time, angle, voltage1, voltage2, voltage3, current1, current2, current3, 
+    tempe, wind, direction, power, nopower, windspeed, motorspeed, frequency, electric, 
+    factor
+  </sql>
+  <select id="selectByExample" parameterType="com.fwzx.photovoltaicdatacollect.pojo.WindActSDataExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from wind_act_sdata
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.fwzx.photovoltaicdatacollect.pojo.WindActSDataExample">
+    delete from wind_act_sdata
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.fwzx.photovoltaicdatacollect.pojo.WindActSData">
+    insert into wind_act_sdata (id, get_time, angle, 
+      voltage1, voltage2, voltage3, 
+      current1, current2, current3, 
+      tempe, wind, direction, 
+      power, nopower, windspeed, 
+      motorspeed, frequency, electric, 
+      factor)
+    values (#{id,jdbcType=VARCHAR}, #{getTime,jdbcType=TIMESTAMP}, #{angle,jdbcType=DOUBLE}, 
+      #{voltage1,jdbcType=DOUBLE}, #{voltage2,jdbcType=DOUBLE}, #{voltage3,jdbcType=DOUBLE}, 
+      #{current1,jdbcType=DOUBLE}, #{current2,jdbcType=DOUBLE}, #{current3,jdbcType=DOUBLE}, 
+      #{tempe,jdbcType=DOUBLE}, #{wind,jdbcType=DOUBLE}, #{direction,jdbcType=DOUBLE}, 
+      #{power,jdbcType=DOUBLE}, #{nopower,jdbcType=DOUBLE}, #{windspeed,jdbcType=DOUBLE}, 
+      #{motorspeed,jdbcType=DOUBLE}, #{frequency,jdbcType=DOUBLE}, #{electric,jdbcType=DOUBLE}, 
+      #{factor,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.WindActSData">
+    insert into wind_act_sdata
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="getTime != null">
+        get_time,
+      </if>
+      <if test="angle != null">
+        angle,
+      </if>
+      <if test="voltage1 != null">
+        voltage1,
+      </if>
+      <if test="voltage2 != null">
+        voltage2,
+      </if>
+      <if test="voltage3 != null">
+        voltage3,
+      </if>
+      <if test="current1 != null">
+        current1,
+      </if>
+      <if test="current2 != null">
+        current2,
+      </if>
+      <if test="current3 != null">
+        current3,
+      </if>
+      <if test="tempe != null">
+        tempe,
+      </if>
+      <if test="wind != null">
+        wind,
+      </if>
+      <if test="direction != null">
+        direction,
+      </if>
+      <if test="power != null">
+        power,
+      </if>
+      <if test="nopower != null">
+        nopower,
+      </if>
+      <if test="windspeed != null">
+        windspeed,
+      </if>
+      <if test="motorspeed != null">
+        motorspeed,
+      </if>
+      <if test="frequency != null">
+        frequency,
+      </if>
+      <if test="electric != null">
+        electric,
+      </if>
+      <if test="factor != null">
+        factor,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="getTime != null">
+        #{getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="angle != null">
+        #{angle,jdbcType=DOUBLE},
+      </if>
+      <if test="voltage1 != null">
+        #{voltage1,jdbcType=DOUBLE},
+      </if>
+      <if test="voltage2 != null">
+        #{voltage2,jdbcType=DOUBLE},
+      </if>
+      <if test="voltage3 != null">
+        #{voltage3,jdbcType=DOUBLE},
+      </if>
+      <if test="current1 != null">
+        #{current1,jdbcType=DOUBLE},
+      </if>
+      <if test="current2 != null">
+        #{current2,jdbcType=DOUBLE},
+      </if>
+      <if test="current3 != null">
+        #{current3,jdbcType=DOUBLE},
+      </if>
+      <if test="tempe != null">
+        #{tempe,jdbcType=DOUBLE},
+      </if>
+      <if test="wind != null">
+        #{wind,jdbcType=DOUBLE},
+      </if>
+      <if test="direction != null">
+        #{direction,jdbcType=DOUBLE},
+      </if>
+      <if test="power != null">
+        #{power,jdbcType=DOUBLE},
+      </if>
+      <if test="nopower != null">
+        #{nopower,jdbcType=DOUBLE},
+      </if>
+      <if test="windspeed != null">
+        #{windspeed,jdbcType=DOUBLE},
+      </if>
+      <if test="motorspeed != null">
+        #{motorspeed,jdbcType=DOUBLE},
+      </if>
+      <if test="frequency != null">
+        #{frequency,jdbcType=DOUBLE},
+      </if>
+      <if test="electric != null">
+        #{electric,jdbcType=DOUBLE},
+      </if>
+      <if test="factor != null">
+        #{factor,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.fwzx.photovoltaicdatacollect.pojo.WindActSDataExample" resultType="java.lang.Long">
+    select count(*) from wind_act_sdata
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update wind_act_sdata
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.getTime != null">
+        get_time = #{record.getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.angle != null">
+        angle = #{record.angle,jdbcType=DOUBLE},
+      </if>
+      <if test="record.voltage1 != null">
+        voltage1 = #{record.voltage1,jdbcType=DOUBLE},
+      </if>
+      <if test="record.voltage2 != null">
+        voltage2 = #{record.voltage2,jdbcType=DOUBLE},
+      </if>
+      <if test="record.voltage3 != null">
+        voltage3 = #{record.voltage3,jdbcType=DOUBLE},
+      </if>
+      <if test="record.current1 != null">
+        current1 = #{record.current1,jdbcType=DOUBLE},
+      </if>
+      <if test="record.current2 != null">
+        current2 = #{record.current2,jdbcType=DOUBLE},
+      </if>
+      <if test="record.current3 != null">
+        current3 = #{record.current3,jdbcType=DOUBLE},
+      </if>
+      <if test="record.tempe != null">
+        tempe = #{record.tempe,jdbcType=DOUBLE},
+      </if>
+      <if test="record.wind != null">
+        wind = #{record.wind,jdbcType=DOUBLE},
+      </if>
+      <if test="record.direction != null">
+        direction = #{record.direction,jdbcType=DOUBLE},
+      </if>
+      <if test="record.power != null">
+        power = #{record.power,jdbcType=DOUBLE},
+      </if>
+      <if test="record.nopower != null">
+        nopower = #{record.nopower,jdbcType=DOUBLE},
+      </if>
+      <if test="record.windspeed != null">
+        windspeed = #{record.windspeed,jdbcType=DOUBLE},
+      </if>
+      <if test="record.motorspeed != null">
+        motorspeed = #{record.motorspeed,jdbcType=DOUBLE},
+      </if>
+      <if test="record.frequency != null">
+        frequency = #{record.frequency,jdbcType=DOUBLE},
+      </if>
+      <if test="record.electric != null">
+        electric = #{record.electric,jdbcType=DOUBLE},
+      </if>
+      <if test="record.factor != null">
+        factor = #{record.factor,jdbcType=DOUBLE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update wind_act_sdata
+    set id = #{record.id,jdbcType=VARCHAR},
+      get_time = #{record.getTime,jdbcType=TIMESTAMP},
+      angle = #{record.angle,jdbcType=DOUBLE},
+      voltage1 = #{record.voltage1,jdbcType=DOUBLE},
+      voltage2 = #{record.voltage2,jdbcType=DOUBLE},
+      voltage3 = #{record.voltage3,jdbcType=DOUBLE},
+      current1 = #{record.current1,jdbcType=DOUBLE},
+      current2 = #{record.current2,jdbcType=DOUBLE},
+      current3 = #{record.current3,jdbcType=DOUBLE},
+      tempe = #{record.tempe,jdbcType=DOUBLE},
+      wind = #{record.wind,jdbcType=DOUBLE},
+      direction = #{record.direction,jdbcType=DOUBLE},
+      power = #{record.power,jdbcType=DOUBLE},
+      nopower = #{record.nopower,jdbcType=DOUBLE},
+      windspeed = #{record.windspeed,jdbcType=DOUBLE},
+      motorspeed = #{record.motorspeed,jdbcType=DOUBLE},
+      frequency = #{record.frequency,jdbcType=DOUBLE},
+      electric = #{record.electric,jdbcType=DOUBLE},
+      factor = #{record.factor,jdbcType=DOUBLE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+</mapper>
