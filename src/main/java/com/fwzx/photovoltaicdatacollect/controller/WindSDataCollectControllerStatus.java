@@ -46,7 +46,7 @@ public class WindSDataCollectControllerStatus {
 
 
     //@Scheduled(cron ="0 0/1 * * * ?")
-    @Scheduled(cron ="0 0,5,10,15,20,25,30,35,40,45,50,55 * * * ? ")
+    //@Scheduled(cron ="0 0,5,10,15,20,25,30,35,40,45,50,55 * * * ? ")
     public void ins(){
 
         IdWorker id = new IdWorker(10);

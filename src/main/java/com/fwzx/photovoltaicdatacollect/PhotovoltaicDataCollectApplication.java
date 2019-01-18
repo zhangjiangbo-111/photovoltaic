@@ -28,7 +28,7 @@ public class PhotovoltaicDataCollectApplication {
         Date date = new Date();
 
         System.out.println(sf.format(date) + " 光伏/风电数据采集系统启动成功！");
-
+        
     }
 
 
