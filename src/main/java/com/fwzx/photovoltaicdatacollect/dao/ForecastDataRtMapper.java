@@ -65,4 +65,6 @@ public interface ForecastDataRtMapper {
     void deleteAllData();
     
     void insertDataByStr(@Param("dataStr") String dataStr);
+    
+    List<ForecastDataRt> selectForecastDataRtByTime(@Param("beginDate") String beginDate,@Param("endDate") String endDate);
 }

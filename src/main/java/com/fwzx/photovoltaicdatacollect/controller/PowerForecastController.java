@@ -22,9 +22,22 @@ public class PowerForecastController {
 	}
 	
 	//保存以当日为开始的第二天数值预报到数值预报历史记录中
-	@Scheduled(cron ="0 35 14 1/1 * ?  ")
+	//@Scheduled(cron ="0 35 14 1/1 * ?  ")
 	public void insertNumericalPreHis(){
 		powerForecastCollerService.insertNumericalPreHis();
 	}
+	
+	//用来录入当日的短期预报，会删除重复数据然后
+	//@Scheduled(cron ="0 18 10 1/1 * ?  ")
+	public void insertShortForecastDataHis(){
+		powerForecastCollerService.insertShortForecastDataHis();
+	}
+	
+	//每15分钟录入一次未来第4个小时后的超短期预报数据
+	@Scheduled(cron ="0 0/15 * * * ? ")
+	public void insertSuperShortForecastDataHis(){
+		powerForecastCollerService.insertSuperShortForecastDataHis();
+	}
+	
 	
 }
