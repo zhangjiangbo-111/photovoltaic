@@ -28,7 +28,7 @@ public class PowerForecastController {
 	}
 	
 	//用来录入当日的短期预报，会删除重复数据然后
-	//@Scheduled(cron ="0 18 10 1/1 * ?  ")
+	//@Scheduled(cron ="0 44 11 1/1 * ?  ")
 	public void insertShortForecastDataHis(){
 		powerForecastCollerService.insertShortForecastDataHis();
 	}
@@ -37,6 +37,12 @@ public class PowerForecastController {
 	@Scheduled(cron ="0 0/15 * * * ? ")
 	public void insertSuperShortForecastDataHis(){
 		powerForecastCollerService.insertSuperShortForecastDataHis();
+	}
+	
+	//录入未来7天短期预报数据到数据库中
+	//@Scheduled(cron ="0 36 14 1/1 * ?  ")
+	public void insertShortForecastFutureData(){
+		powerForecastCollerService.insertShortForecastFutureData();
 	}
 	
 	

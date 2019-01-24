@@ -19,6 +19,7 @@ import com.fwzx.photovoltaicdatacollect.dao.ForecastDataHisMapper;
 import com.fwzx.photovoltaicdatacollect.dao.ForecastDataRtMapper;
 import com.fwzx.photovoltaicdatacollect.dao.PhotoActDataMapper;
 import com.fwzx.photovoltaicdatacollect.dao.PhotovoltaicBpMapper;
+import com.fwzx.photovoltaicdatacollect.dao.ShortForecFutMapper;
 import com.fwzx.photovoltaicdatacollect.dao.ShortForecHisMapper;
 import com.fwzx.photovoltaicdatacollect.dao.SupershortForecHisMapper;
 import com.fwzx.photovoltaicdatacollect.pojo.CoefficientOfPowerpredictionmodel;
@@ -26,6 +27,7 @@ import com.fwzx.photovoltaicdatacollect.pojo.ForecastDataRt;
 import com.fwzx.photovoltaicdatacollect.pojo.PhotoActData;
 import com.fwzx.photovoltaicdatacollect.pojo.PhotovoltaicBp;
 import com.fwzx.photovoltaicdatacollect.pojo.SupershortForecHis;
+import com.fwzx.photovoltaicdatacollect.util.IdWorker;
 
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
@@ -55,6 +57,9 @@ public class PowerForecastCollerService {
 	
 	@Autowired
 	SupershortForecHisMapper supershortForecHisMapper;
+	
+	@Autowired
+	ShortForecFutMapper shortForecFutMapper;
 	
 	/***
 	 * 对数据预报的入库操作 删除旧数据，添加新数据
@@ -178,6 +183,9 @@ public class PowerForecastCollerService {
 
 	}
 
+	/**
+	 * 录入短期预报的历史数据
+	 */
 	public void insertShortForecastDataHis() {
 		// 存放数据的map
 		Map<String, Double> dataMap = new LinkedHashMap<String, Double>();
@@ -193,6 +201,7 @@ public class PowerForecastCollerService {
 		SimpleDateFormat dataTimeFormat = new SimpleDateFormat("yyyyMMddHHmm");
 		SimpleDateFormat dataTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
 		SimpleDateFormat dataTimeFormat3 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dataTimeFormat4 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String tempFileStr = dateFormat.format(new Date(calendar.getTimeInMillis()));
 		String fileStr = wenJianQianZhui + tempFileStr + wenJianHouZhui;
 		// 删除重复数据所用的字符串
@@ -210,6 +219,8 @@ public class PowerForecastCollerService {
 			String s = null;
 			calendar.add(Calendar.DAY_OF_MONTH, 2);
 			int flag = 0;
+			IdWorker id = new IdWorker();
+			Date nowDate=new Date();
 			while ((s = br.readLine()) != null) {
 				String[] arr = s.split("\\s+");
 				Date date = dataTimeFormat.parse(arr[0]);
@@ -220,23 +231,23 @@ public class PowerForecastCollerService {
 				// System.out.println(arr[0].substring(0, 8)+"
 				// "+dateFormat.format(new Date(calendar2.getTimeInMillis())));
 				if (arr[0].substring(0, 8).equals(dateFormat.format(new Date(todayCal.getTimeInMillis())))) {
-					dataMap.put(dataTimeFormat2.format(date),
+					double tempGongLv=
 							Double.parseDouble(arr[1]) * Double.parseDouble(arr[1]) * cOP.getCoefficientOne()
 									+ Double.parseDouble(arr[1]) * Double.parseDouble(arr[6]) * cOP.getCoefficientTwo()
-									+ Double.parseDouble(arr[1]) * cOP.getCoefficientThree());
-					// dataSql += "('" + dataTimeFormat2.format(date) + "'," +
-					// arr[1] + "," + arr[2] + "," + arr[3] + ","
-					// + arr[4] + "," + arr[5] + "," + arr[6] + "," + arr[7] +
-					// "," + arr[8] + "),";
-
+									+ Double.parseDouble(arr[1]) * cOP.getCoefficientThree();
+					 dataSql += "("+id.nextId("15") +",'" + dataTimeFormat2.format(date) + "'," +
+					 arr[1] + "," + arr[4] + "," + arr[5] + ","
+					 + arr[6] + "," + arr[7] + "," + arr[8] + "," + tempGongLv +
+					 ",'" + dataTimeFormat4.format(nowDate) + "'),";
+					 flag = 1;
 				}
 
 			}
 
-			for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
-				dataSql += "('" + entry.getKey() + "'," + entry.getValue() + "),";
-				flag = 1;
-			}
+//			for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
+//				dataSql += "('" + entry.getKey() + "'," + entry.getValue() + "),";
+//				flag = 1;
+//			}
 			// 去除多余的逗号
 			if (flag == 1) {
 				dataSql = dataSql.substring(0, dataSql.length() - 1);
@@ -257,6 +268,10 @@ public class PowerForecastCollerService {
 		shortForecHisMapper.insertDataByStr(dataSql);
 	}
 
+	
+	/**
+	 * 录入超短期预报的历史数据方法
+	 */
 	public void insertSuperShortForecastDataHis() {
 		// 约定订正小时
 		int revisionHour = 6;
@@ -413,21 +428,127 @@ public class PowerForecastCollerService {
 
 			}
 
-		}		
+		}	
+		List<ForecastDataRt> fCD = forecastDataRtMapper.selectForecastDataRtByTime("'" + beginDate + "'",
+				"'" + endDate + "'");
 		try {
+			System.out.println("123");
+			System.out.println(beginDate+"  "+endDate);
+			for(ForecastDataRt f:fCD){
+				System.out.println("456789");
+				System.out.println(f.getDataTime());
+			}
+			ForecastDataRt fcd=fCD.get(0);
 			SupershortForecHis sFH=new SupershortForecHis();
+			IdWorker id=new IdWorker();
 			for (Map.Entry<String, Double> entry : dataMap.entrySet()) { 
 				  System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
+				  sFH.setId(id.nextId("15"));
 				  sFH.setDataTime(df.parse(entry.getKey()));
+				  sFH.setInstRadiation(fcd.getTotalRadiation());
+				  sFH.setWindS(fcd.getWindS());
+				  sFH.setWindD(fcd.getWindD());
+				  sFH.setTem(fcd.getTem());
+				  sFH.setHumi(fcd.getHumi());
+				  sFH.setPress(fcd.getPress());
 				  sFH.setShortForec(entry.getValue());
+				  sFH.setEntryTime(new Date());
 				  supershortForecHisMapper.insert(sFH);
 			}
 			
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		
 	}
 
+	/**
+	 * 计算出未来7天的短期预报并存储在数据库中
+	 */
+	public void insertShortForecastFutureData() {
+
+		// 存放数据的map
+		Map<String, Double> dataMap = new LinkedHashMap<String, Double>();
+		// 得到系数
+		CoefficientOfPowerpredictionmodel cOP = coefficientOfPowerpredictionmodelMapper.getCoefficient();
+		// 得到昨天的日期
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		// 得到今天的日期
+		Calendar todayCal = Calendar.getInstance();
+		// 数据格式化
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat dataTimeFormat = new SimpleDateFormat("yyyyMMddHHmm");
+		SimpleDateFormat dataTimeFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:00");
+		SimpleDateFormat dataTimeFormat3 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dataTimeFormat4 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String tempFileStr = dateFormat.format(new Date(calendar.getTimeInMillis()));
+		String fileStr = wenJianQianZhui + tempFileStr + wenJianHouZhui;
+		// 删除重复数据所用的字符串
+		String saveDataTime = dataTimeFormat3.format(new Date(todayCal.getTimeInMillis()));
+		// 拼接数据字符串
+		String dataSql = "";
+		try {
+			SmbFile smbFile = new SmbFile(fileStr);
+
+			int length = smbFile.getContentLength();
+			byte buffer[] = new byte[length];
+			SmbFileInputStream in = new SmbFileInputStream(smbFile);
+			InputStreamReader reader = new InputStreamReader(in);
+			BufferedReader br = new BufferedReader(reader);
+			String s = null;
+			calendar.add(Calendar.DAY_OF_MONTH, 2);
+			int flag = 0;
+			IdWorker id = new IdWorker();
+			Date nowDate=new Date();
+			while ((s = br.readLine()) != null) {
+				String[] arr = s.split("\\s+");
+				Date date = dataTimeFormat.parse(arr[0]);
+				// System.out.println(dataTimeFormat2.format(date) + " " +
+				// arr[1] + " " + arr[2] + " " + arr[3] + " "
+				// + arr[4] + " " + arr[5] + " " + arr[6] + " " + arr[7] + " " +
+				// arr[8]);
+				// System.out.println(arr[0].substring(0, 8)+"
+				// "+dateFormat.format(new Date(calendar2.getTimeInMillis())));
+//				if (arr[0].substring(0, 8).equals(dateFormat.format(new Date(todayCal.getTimeInMillis())))) {
+					double tempGongLv=
+							Double.parseDouble(arr[1]) * Double.parseDouble(arr[1]) * cOP.getCoefficientOne()
+									+ Double.parseDouble(arr[1]) * Double.parseDouble(arr[6]) * cOP.getCoefficientTwo()
+									+ Double.parseDouble(arr[1]) * cOP.getCoefficientThree();
+					 dataSql += "("+id.nextId("15") +",'" + dataTimeFormat2.format(date) + "'," +
+					 arr[1] + "," + arr[4] + "," + arr[5] + ","
+					 + arr[6] + "," + arr[7] + "," + arr[8] + "," + tempGongLv +
+					 ",'" + dataTimeFormat4.format(nowDate) + "'),";
+					 flag = 1;
+//				}
+
+			}
+
+//			for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
+//				dataSql += "('" + entry.getKey() + "'," + entry.getValue() + "),";
+//				flag = 1;
+//			}
+			// 去除多余的逗号
+			if (flag == 1) {
+				dataSql = dataSql.substring(0, dataSql.length() - 1);
+			} else {
+				return;
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return;
+		}
+		System.out.println("3456");
+		System.out.println(dataSql);
+		// 删除整个未来数据记录表数据
+		shortForecFutMapper.deleteAllData();
+		// 插入最新数据
+		shortForecFutMapper.insertDataByStr(dataSql);
+	
+	}
+	
+	
 }
