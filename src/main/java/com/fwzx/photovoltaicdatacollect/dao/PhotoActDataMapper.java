@@ -4,6 +4,7 @@ import com.fwzx.photovoltaicdatacollect.pojo.PhotoActData;
 import com.fwzx.photovoltaicdatacollect.pojo.PhotoActDataExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface PhotoActDataMapper {
     /**
@@ -63,4 +64,10 @@ public interface PhotoActDataMapper {
     int updateByExample(@Param("record") PhotoActData record, @Param("example") PhotoActDataExample example);
 
 	List<PhotoActData> selectPhotoActDataByTime(@Param("beginDate") String beginDate,@Param("endDate") String endDate);
+
+	//select * from photo_act_data where get_time between #{beginDate} and #{endDate} order by get_time
+	@Select("select * from photo_act_data where get_time between #{beginDate} and #{endDate} order by get_time")
+	List<PhotoActData> selectPhotoActData(@Param("beginDate") String beginDate,@Param("endDate") String endDate);
+	
+	List<PhotoActData> selectPhotoActDataByTime2(@Param("beginDate") String beginDate,@Param("endDate") String endDate);
 }

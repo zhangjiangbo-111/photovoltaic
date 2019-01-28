@@ -24,7 +24,7 @@ public class PhotovoltaicDataCollectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PhotovoltaicDataCollectApplication.class, args);
-        SimpleDateFormat sf = new SimpleDateFormat("YYYY-MM-dd HH:MM:ss");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
 
         System.out.println(sf.format(date) + " 光伏/风电数据采集系统启动成功！");

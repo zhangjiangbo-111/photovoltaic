@@ -2,6 +2,7 @@ package com.fwzx.photovoltaicdatacollect.pojo;
 
 import java.util.Date;
 
+
 public class PhotoActData {
     /**
      *
@@ -365,4 +366,13 @@ public class PhotoActData {
     public void setEntryTime(Date entryTime) {
         this.entryTime = entryTime;
     }
+
+	@Override
+	public String toString() {
+		return "PhotoActData [id=" + id + ", getTime=" + getTime + ", instRadiation=" + instRadiation + ", windS="
+				+ windS + ", windD=" + windD + ", tem=" + tem + ", humi=" + humi + ", press=" + press + ", prePower="
+				+ prePower + ", actPower=" + actPower + ", entryTime=" + entryTime + "]";
+	}
+    
+    
 }
