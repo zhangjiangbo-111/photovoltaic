@@ -28,7 +28,7 @@ public class PowerForecastController {
 	}
 	
 	//用来录入当日的短期预报，会删除重复数据然后录入数据
-	//@Scheduled(cron ="0 39 9 1/1 * ?  ")
+	//@Scheduled(cron ="0 27 11 1/1 * ?  ")
 	public void insertShortForecastDataHis(){
 		powerForecastCollerService.insertShortForecastDataHis();
 	}

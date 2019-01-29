@@ -306,8 +306,9 @@
   	order by get_time
   </select>
   
-   <select id="selectPhotoActDataByTime2" resultMap="BaseResultMap">
-  	select * from photo_act_data where get_time between #{beginDate} and #{endDate} order by get_time
+   <select id="selectPhotoActDataByStr" resultMap="BaseResultMap">
+  	select * from photo_act_data 
+  	where get_time in (${dateStr}) order by get_time
   </select>
   
   

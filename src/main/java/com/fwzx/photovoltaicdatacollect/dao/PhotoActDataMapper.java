@@ -65,9 +65,5 @@ public interface PhotoActDataMapper {
 
 	List<PhotoActData> selectPhotoActDataByTime(@Param("beginDate") String beginDate,@Param("endDate") String endDate);
 
-	//select * from photo_act_data where get_time between #{beginDate} and #{endDate} order by get_time
-	@Select("select * from photo_act_data where get_time between #{beginDate} and #{endDate} order by get_time")
-	List<PhotoActData> selectPhotoActData(@Param("beginDate") String beginDate,@Param("endDate") String endDate);
-	
-	List<PhotoActData> selectPhotoActDataByTime2(@Param("beginDate") String beginDate,@Param("endDate") String endDate);
+	List<PhotoActData> selectPhotoActDataByStr(@Param("dateStr") String dateStr);
 }

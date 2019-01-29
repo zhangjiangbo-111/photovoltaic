@@ -14,19 +14,33 @@ import com.fwzx.photovoltaicdatacollect.service.PowerQualiRateCollerService;
 public class PowerQualiRateController {
 	@Autowired
 	PowerQualiRateCollerService powerQualiRateCollerService;
-	
-	//计算昨天的短期预报合格率
-	@Scheduled(cron ="0 31 14 1/1 * ?  ")
-	public void CalShortQualiRateByYesterDay(){
-		//格式化日期格式
+
+	// 计算昨天的短期预报合格率
+	//@Scheduled(cron = "0 38 14 1/1 * ?  ")
+	public void CalShortQualiRateByYesterDay() {
+		// 格式化日期格式
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		//得到现在的时间
-		Calendar cal=Calendar.getInstance();
-		//日期减1
+		// 得到现在的时间
+		Calendar cal = Calendar.getInstance();
+		// 日期减1
 		cal.add(Calendar.DATE, -1);
-		//调用方法计算合格率并入库
+		// 调用方法计算合格率并入库
 		powerQualiRateCollerService.CalShortQualiRateByOneDay(dateFormat.format(new Date(cal.getTimeInMillis())));
+
 	}
-	
-	
+
+	// 计算昨天的超短期预报合格率
+	@Scheduled(cron = "0 56 16 1/1 * ?  ")
+	public void CalSuperShortQualiRateByYesterDay() {
+		// 格式化日期格式
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		// 得到现在的时间
+		Calendar cal = Calendar.getInstance();
+		// 日期减1
+		cal.add(Calendar.DATE, -1);
+		// 调用方法计算合格率并入库
+		powerQualiRateCollerService.CalSuperShortQualiRateByOneDay(dateFormat.format(new Date(cal.getTimeInMillis())));
+
+	}
+
 }

@@ -1,9 +1,11 @@
 package com.fwzx.photovoltaicdatacollect.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.fwzx.photovoltaicdatacollect.pojo.SupershortForecHis;
 import com.fwzx.photovoltaicdatacollect.pojo.SupershortForecHisExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
 public interface SupershortForecHisMapper {
     /**
@@ -61,4 +63,6 @@ public interface SupershortForecHisMapper {
      * @mbg.generated Thu Jan 24 11:47:13 CST 2019
      */
     int updateByExample(@Param("record") SupershortForecHis record, @Param("example") SupershortForecHisExample example);
+
+    List<SupershortForecHis> selectSuperShortForecHisByStr(@Param("dateStr") String dateStr);
 }

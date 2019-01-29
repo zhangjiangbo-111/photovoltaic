@@ -332,4 +332,13 @@ public class ShortForecHis {
     public void setEntryTime(Date entryTime) {
         this.entryTime = entryTime;
     }
+
+	@Override
+	public String toString() {
+		return "ShortForecHis [id=" + id + ", dataTime=" + dataTime + ", instRadiation=" + instRadiation + ", windS="
+				+ windS + ", windD=" + windD + ", tem=" + tem + ", humi=" + humi + ", press=" + press + ", shortForec="
+				+ shortForec + ", entryTime=" + entryTime + "]";
+	}
+    
+    
 }

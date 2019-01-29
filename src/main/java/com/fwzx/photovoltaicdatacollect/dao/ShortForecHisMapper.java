@@ -65,6 +65,8 @@ public interface ShortForecHisMapper {
 	void deleteRepeatDataByTime(@Param("timeStr") String timeStr);
 
 	void insertDataByStr(@Param("dataSql") String dataSql);
+
+	List<ShortForecHis> selectShortForecHisByStr(@Param("dateStr") String dateStr);
 	
 	
 }
