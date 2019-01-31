@@ -17,7 +17,7 @@ public class PowerAccurRateController {
 	PowerAccurRateCollerService powerAccurRateCollerService;
 
 	// 计算昨天的短期预报准确率
-	//@Scheduled(cron = "0 17 13 1/1 * ? ")
+	@Scheduled(cron = "0 20 17 1/1 * ? ")
 	public void CalShortQualiRateByYesterDay() {
 		// 格式化日期格式
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

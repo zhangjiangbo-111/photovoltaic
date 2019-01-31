@@ -94,7 +94,7 @@ public class PowerAccurRateCollerService {
 			for(ShortForecHis sfh:sFHList){
 				if(df.format(pad.getGetTime()).equals(df.format(sfh.getDataTime()))){
 					//shortQuali+=1.0-Math.abs(pad.getActPower()-sfh.getShortForec())/capacity;
-					shortQuali+=pad.getActPower()-sfh.getShortForec();
+					shortQuali+=Math.abs(pad.getActPower()-sfh.getShortForec());
 					shortQualiNum++;
 				}
 			}
@@ -181,7 +181,7 @@ public class PowerAccurRateCollerService {
 			for(SupershortForecHis sfh:sFHList){
 				if(df.format(pad.getGetTime()).equals(df.format(sfh.getDataTime()))){
 					//shortQuali+=1.0-Math.abs(pad.getActPower()-sfh.getShortForec())/capacity;
-					shortQuali+=pad.getActPower()-sfh.getShortForec();
+					shortQuali+=Math.abs(pad.getActPower()-sfh.getShortForec());
 					shortQualiNum++;
 					System.out.println("有相同的时间");
 				}
