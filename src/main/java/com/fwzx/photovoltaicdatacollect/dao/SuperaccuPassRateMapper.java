@@ -64,8 +64,9 @@ public interface SuperaccuPassRateMapper {
      */
     int updateByExample(@Param("record") SuperaccuPassRate record, @Param("example") SuperaccuPassRateExample example);
 
-    int updatePassRateByDateTime(@Param("apr") SuperaccuPassRate apr);
+    int updateSuperPassRateByDateTime(@Param("apr") SuperaccuPassRate apr);
 
     SuperaccuPassRate selectByDataTime(@Param("dataTime") String dataTime);
     
+    int updateSuperAccuRateByDateTime(@Param("apr") SuperaccuPassRate apr);
 }

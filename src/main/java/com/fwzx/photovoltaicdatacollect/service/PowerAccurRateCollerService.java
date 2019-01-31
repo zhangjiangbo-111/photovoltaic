@@ -24,7 +24,7 @@ import com.fwzx.photovoltaicdatacollect.pojo.SupershortForecHis;
 import com.fwzx.photovoltaicdatacollect.util.IdWorker;
 
 @Service
-public class PowerQualiRateCollerService {
+public class PowerAccurRateCollerService {
 	
 	@Autowired
 	PhotoActDataMapper photoActDataMapper;
@@ -44,11 +44,8 @@ public class PowerQualiRateCollerService {
 	@Autowired
 	SuperaccuPassRateMapper superaccuPassRateMapper;
 	
-	/**
-	 * 计算短期预报合格率
-	 * @param day 要计算合格率的日期
-	 */
-	public void CalShortQualiRateByOneDay(String day){
+
+	public void CalShortAccurRateByOneDay(String day) {
 //		//得到开始时间
 //		String beginDate=day+" 00:00:00";
 //		//得到结束时间
@@ -89,34 +86,34 @@ public class PowerQualiRateCollerService {
 		for(PhotovoltaicBp pb:pBList){
 			capacity+=pb.getpCapacity();
 		}
-		//算出合格率
-		//计算各个时刻数据的合格率
+		//算出准确率
+		//计算各个时刻数据的准确率
 		double shortQuali=0;
 		double shortQualiNum=0;
 		for(PhotoActData pad:pADList){
 			for(ShortForecHis sfh:sFHList){
 				if(df.format(pad.getGetTime()).equals(df.format(sfh.getDataTime()))){
-					shortQuali+=1.0-Math.abs(pad.getActPower()-sfh.getShortForec())/capacity;
+					//shortQuali+=1.0-Math.abs(pad.getActPower()-sfh.getShortForec())/capacity;
+					shortQuali+=pad.getActPower()-sfh.getShortForec();
 					shortQualiNum++;
 				}
 			}
 		}
-		//计算一天的合格率
+		//计算一天的准确率
+		//double oneDayShortQuali=shortQuali/shortQualiNum*100.0;
 		double oneDayShortQuali=0;
 		if(shortQualiNum!=0){
-			oneDayShortQuali=shortQuali/shortQualiNum*100.0;
+			oneDayShortQuali=1-shortQuali/(shortQualiNum*capacity);
 		}
-		System.out.println("合格率： "+oneDayShortQuali);
+		System.out.println("准确率： "+oneDayShortQuali);
 		//提取数据，如果为空则新增数据
-		System.out.println(dayTemp);
 		AccuPassRate apr=accuPassRateMapper.selectByDataTime(dayTemp);
-		System.out.println(apr);
 		//赋值并入库
 		if(apr==null){
 			AccuPassRate aprTemp = new AccuPassRate();
 			IdWorker id=new IdWorker();
 			aprTemp.setId(id.nextId("15"));
-			aprTemp.setPassRate(oneDayShortQuali);
+			aprTemp.setAccuRate(oneDayShortQuali);
 			try {
 				aprTemp.setDataTime(df.parse(dayTemp));
 				accuPassRateMapper.insert(aprTemp);
@@ -125,8 +122,8 @@ public class PowerQualiRateCollerService {
 			}
 			System.out.println(aprTemp.toString());
 		}else{
-			apr.setPassRate(oneDayShortQuali);
-			accuPassRateMapper.updatePassRateByDateTime(apr);
+			apr.setAccuRate(oneDayShortQuali);
+			accuPassRateMapper.updateAccuRateByDateTime(apr);
 			System.out.println(apr.toString());
 		}
 		
@@ -134,12 +131,8 @@ public class PowerQualiRateCollerService {
 		
 	}
 
-	
-	/**
-	 * 计算超短期预报合格率
-	 * @param day 要计算合格率的日期
-	 */
-	public void CalSuperShortQualiRateByOneDay(String day) {
+	public void CalSuperShortAccurRateByOneDay(String day) {
+
 //		//得到开始时间
 //		String beginDate=day+" 00:00:00";
 //		//得到结束时间
@@ -180,26 +173,27 @@ public class PowerQualiRateCollerService {
 		for(PhotovoltaicBp pb:pBList){
 			capacity+=pb.getpCapacity();
 		}
-		//算出合格率
-		//计算各个时刻数据的合格率
+		//算出准确率
+		//计算各个时刻数据的准确率
 		double shortQuali=0;
 		double shortQualiNum=0;
 		for(PhotoActData pad:pADList){
 			for(SupershortForecHis sfh:sFHList){
 				if(df.format(pad.getGetTime()).equals(df.format(sfh.getDataTime()))){
-					shortQuali+=1.0-Math.abs(pad.getActPower()-sfh.getShortForec())/capacity;
+					//shortQuali+=1.0-Math.abs(pad.getActPower()-sfh.getShortForec())/capacity;
+					shortQuali+=pad.getActPower()-sfh.getShortForec();
 					shortQualiNum++;
 					System.out.println("有相同的时间");
 				}
 			}
 		}
 		System.out.println("开始计算");
-		//计算一天的合格率
+		//计算一天的准确率
 		double oneDayShortQuali=0;
 		if(shortQualiNum!=0){
-			oneDayShortQuali=shortQuali/shortQualiNum*100.0;
+			oneDayShortQuali=1-shortQuali/(shortQualiNum*capacity);
 		}
-		System.out.println("合格率： "+oneDayShortQuali);
+		System.out.println("准确率： "+oneDayShortQuali);
 		//提取数据，如果为空则新增数据
 		SuperaccuPassRate apr=superaccuPassRateMapper.selectByDataTime(dayTemp);
 		//赋值并入库
@@ -207,7 +201,7 @@ public class PowerQualiRateCollerService {
 			SuperaccuPassRate aprTemp = new SuperaccuPassRate();
 			IdWorker id=new IdWorker();
 			aprTemp.setId(id.nextId("15"));
-			aprTemp.setPassRate(oneDayShortQuali);
+			aprTemp.setAccuRate(oneDayShortQuali);
 			try {
 				aprTemp.setDataTime(df.parse(dayTemp));
 				superaccuPassRateMapper.insert(aprTemp);
@@ -216,12 +210,12 @@ public class PowerQualiRateCollerService {
 			}
 			System.out.println(aprTemp.toString());
 		}else{
-			apr.setPassRate(oneDayShortQuali);
-			superaccuPassRateMapper.updateSuperPassRateByDateTime(apr);
+			apr.setAccuRate(oneDayShortQuali);
+			superaccuPassRateMapper.updateSuperAccuRateByDateTime(apr);
 			System.out.println(apr.toString());
 		}
 		
+			
 	}
-	
 	
 }

@@ -67,4 +67,6 @@ public interface AccuPassRateMapper {
     int updatePassRateByDateTime(@Param("apr") AccuPassRate apr);
 
     AccuPassRate selectByDataTime(@Param("dataTime") String dataTime);
+
+	int updateAccuRateByDateTime(@Param("apr") AccuPassRate apr);
 }

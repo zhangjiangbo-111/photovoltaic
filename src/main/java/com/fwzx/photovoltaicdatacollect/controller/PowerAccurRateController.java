@@ -8,15 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
-import com.fwzx.photovoltaicdatacollect.service.PowerQualiRateCollerService;
+import com.fwzx.photovoltaicdatacollect.service.PowerAccurRateCollerService;
 
 @Controller
-public class PowerQualiRateController {
-	@Autowired
-	PowerQualiRateCollerService powerQualiRateCollerService;
+public class PowerAccurRateController {
 
-	// 计算昨天的短期预报合格率
-	//@Scheduled(cron = "0 50 11 1/1 * ?  ")
+	@Autowired
+	PowerAccurRateCollerService powerAccurRateCollerService;
+
+	// 计算昨天的短期预报准确率
+	//@Scheduled(cron = "0 17 13 1/1 * ? ")
 	public void CalShortQualiRateByYesterDay() {
 		// 格式化日期格式
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -24,13 +25,13 @@ public class PowerQualiRateController {
 		Calendar cal = Calendar.getInstance();
 		// 日期减1
 		cal.add(Calendar.DATE, -1);
-		// 调用方法计算合格率并入库
-		powerQualiRateCollerService.CalShortQualiRateByOneDay(dateFormat.format(new Date(cal.getTimeInMillis())));
+		// 调用方法计算准确率并入库
+		powerAccurRateCollerService.CalShortAccurRateByOneDay(dateFormat.format(new Date(cal.getTimeInMillis())));
 
 	}
 
-	// 计算昨天的超短期预报合格率
-	//@Scheduled(cron = "0 34 12 1/1 * ?  ")
+	// 计算昨天的超短期预报准确率
+	@Scheduled(cron = "0 49 13 1/1 * ?  ")
 	public void CalSuperShortQualiRateByYesterDay() {
 		// 格式化日期格式
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,8 +39,8 @@ public class PowerQualiRateController {
 		Calendar cal = Calendar.getInstance();
 		// 日期减1
 		cal.add(Calendar.DATE, -1);
-		// 调用方法计算合格率并入库
-		powerQualiRateCollerService.CalSuperShortQualiRateByOneDay(dateFormat.format(new Date(cal.getTimeInMillis())));
+		// 调用方法计算准确率并入库
+		powerAccurRateCollerService.CalSuperShortAccurRateByOneDay(dateFormat.format(new Date(cal.getTimeInMillis())));
 
 	}
 

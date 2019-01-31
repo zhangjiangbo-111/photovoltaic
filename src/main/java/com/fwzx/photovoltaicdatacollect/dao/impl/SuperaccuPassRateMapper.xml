@@ -279,10 +279,16 @@
 		superaccu_pass_rate where data_time=#{dataTime}
 	</select>
 
-	<update id="updatePassRateByDateTime">
+	<update id="updateSuperPassRateByDateTime">
 		update superaccu_pass_rate
 		set pass_rate=#{apr.passRate}
-		where data_time=#{apr.dataTime}
+		where data_time=#{apr.dataTime} and id=#{apr.id}
+	</update>
+	
+	<update id="updateSuperAccuRateByDateTime">
+		update superaccu_pass_rate
+		set accu_rate=#{apr.accuRate}
+		where data_time=#{apr.dataTime} and id=#{apr.id}
 	</update>
 
 </mapper>
