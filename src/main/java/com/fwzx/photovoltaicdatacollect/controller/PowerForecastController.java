@@ -15,7 +15,7 @@ public class PowerForecastController {
 	PowerForecastCollerService powerForecastCollerService;
 	
 	//把原來的数值预报删除并添加新的数值预报数据
-	//@Scheduled(cron ="0 37 9 1/1 * ?  ")
+	//@Scheduled(cron ="0 46 15 1/1 * ?  ")
 	public void insertNumericalPre(){
 		powerForecastCollerService.insertNumericalPre();
 		
@@ -28,7 +28,7 @@ public class PowerForecastController {
 	}
 	
 	//用来录入当日的短期预报，会删除重复数据然后录入数据
-	//@Scheduled(cron ="0 27 11 1/1 * ?  ")
+	//@Scheduled(cron ="0 2 16 1/1 * ?  ")
 	public void insertShortForecastDataHis(){
 		powerForecastCollerService.insertShortForecastDataHis();
 	}
@@ -40,7 +40,7 @@ public class PowerForecastController {
 	}
 	
 	//录入未来7天短期预报数据到数据库中
-	//@Scheduled(cron ="0 36 14 1/1 * ?  ")
+	//@Scheduled(cron ="0 58 15 1/1 * ?  ")
 	public void insertShortForecastFutureData(){
 		powerForecastCollerService.insertShortForecastFutureData();
 	}

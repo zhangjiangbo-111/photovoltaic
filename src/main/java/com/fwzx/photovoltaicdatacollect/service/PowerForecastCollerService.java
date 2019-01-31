@@ -13,7 +13,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.fwzx.photovoltaicdatacollect.dao.CoefficientOfPowerpredictionmodelMapper;
 import com.fwzx.photovoltaicdatacollect.dao.ForecastDataHisMapper;
 import com.fwzx.photovoltaicdatacollect.dao.ForecastDataRtMapper;
@@ -36,7 +35,7 @@ import jcifs.smb.SmbFileInputStream;
 public class PowerForecastCollerService {
 	private static String wenJianQianZhui = "smb://administrator:zyt2304@172.18.33.198/fdfw/ZbgGF/HBCDEG-sun-";
 	private static String wenJianHouZhui = "20.txt";
-	
+
 	@Autowired
 	PhotoActDataMapper photoActDataMapper;
 
@@ -54,13 +53,13 @@ public class PowerForecastCollerService {
 
 	@Autowired
 	PhotovoltaicBpMapper photovoltaicBpMapper;
-	
+
 	@Autowired
 	SupershortForecHisMapper supershortForecHisMapper;
-	
+
 	@Autowired
 	ShortForecFutMapper shortForecFutMapper;
-	
+
 	/***
 	 * 对数据预报的入库操作 删除旧数据，添加新数据
 	 */
@@ -220,7 +219,11 @@ public class PowerForecastCollerService {
 			calendar.add(Calendar.DAY_OF_MONTH, 2);
 			int flag = 0;
 			IdWorker id = new IdWorker();
-			Date nowDate=new Date();
+			Date nowDate = new Date();
+			Map<Integer, String> dataSql1 = new LinkedHashMap();
+			Map<Integer, String> dataSql2 = new LinkedHashMap();
+			Map<Integer, Double> dataSqlData = new LinkedHashMap();
+			int dataSqlFlag = 0;
 			while ((s = br.readLine()) != null) {
 				String[] arr = s.split("\\s+");
 				Date date = dataTimeFormat.parse(arr[0]);
@@ -231,23 +234,65 @@ public class PowerForecastCollerService {
 				// System.out.println(arr[0].substring(0, 8)+"
 				// "+dateFormat.format(new Date(calendar2.getTimeInMillis())));
 				if (arr[0].substring(0, 8).equals(dateFormat.format(new Date(todayCal.getTimeInMillis())))) {
-					double tempGongLv=
-							Double.parseDouble(arr[1]) * Double.parseDouble(arr[1]) * cOP.getCoefficientOne()
-									+ Double.parseDouble(arr[1]) * Double.parseDouble(arr[6]) * cOP.getCoefficientTwo()
-									+ Double.parseDouble(arr[1]) * cOP.getCoefficientThree();
-					 dataSql += "("+id.nextId("15") +",'" + dataTimeFormat2.format(date) + "'," +
-					 arr[1] + "," + arr[4] + "," + arr[5] + ","
-					 + arr[6] + "," + arr[7] + "," + arr[8] + "," + tempGongLv +
-					 ",'" + dataTimeFormat4.format(nowDate) + "'),";
-					 flag = 1;
+
+					double tempGongLv = Double.parseDouble(arr[1]) * Double.parseDouble(arr[1])
+							* cOP.getCoefficientOne()
+							+ Double.parseDouble(arr[1]) * Double.parseDouble(arr[6]) * cOP.getCoefficientTwo()
+							+ Double.parseDouble(arr[1]) * cOP.getCoefficientThree();
+					dataSqlData.put(dataSqlFlag, tempGongLv);
+					dataSql1.put(dataSqlFlag, "(" + id.nextId("15") + ",'" + dataTimeFormat2.format(date) + "',"
+							+ arr[1] + "," + arr[4] + "," + arr[5] + "," + arr[6] + "," + arr[7] + "," + arr[8] + ",");
+					dataSql2.put(dataSqlFlag, ",'" + dataTimeFormat4.format(nowDate) + "'),");
+					// dataSql += "(" + id.nextId("15") + ",'" +
+					// dataTimeFormat2.format(date) + "'," + arr[1] + ","
+					// + arr[4] + "," + arr[5] + "," + arr[6] + "," + arr[7] +
+					// "," + arr[8] + "," + tempGongLv
+					// + ",'" + dataTimeFormat4.format(nowDate) + "'),";
+					flag = 1;
+					dataSqlFlag++;
 				}
 
 			}
+			// 得到预报最大值
+			double yuBaoGongLvZuiDaZhi = 0;
+			for (Map.Entry<Integer, Double> entry : dataSqlData.entrySet()) {
+				// System.out.println("Key = " + entry.getKey() + ", Value = " +
+				// entry.getValue());
+				if (entry.getValue() < 0) {
+					dataSqlData.put(entry.getKey(), 0d);
+				}
+				if (yuBaoGongLvZuiDaZhi < entry.getValue()) {
+					yuBaoGongLvZuiDaZhi = entry.getValue();
+				}
+			}
 
-//			for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
-//				dataSql += "('" + entry.getKey() + "'," + entry.getValue() + "),";
-//				flag = 1;
-//			}
+			// 得到额定发电功率
+			List<PhotovoltaicBp> pbAll = photovoltaicBpMapper.queryAll();
+			double eDingFaDianGongLv = 0;
+			for (PhotovoltaicBp pbp : pbAll) {
+				eDingFaDianGongLv += pbp.getpCapacity();
+			}
+			eDingFaDianGongLv = eDingFaDianGongLv * 0.85;
+			if (eDingFaDianGongLv < yuBaoGongLvZuiDaZhi) {
+				double tempBiLi = eDingFaDianGongLv / yuBaoGongLvZuiDaZhi;
+				for (Map.Entry<Integer, Double> entry : dataSqlData.entrySet()) {
+					// System.out.println("Key = " + entry.getKey() + ", Value =
+					// " +
+					// entry.getValue());
+					dataSqlData.put(entry.getKey(), entry.getValue() * tempBiLi);
+				}
+
+			}
+			// 拼接字符串
+			for (int i = 0; i < dataSqlFlag; i++) {
+				dataSql += dataSql1.get(i) + dataSqlData.get(i) + dataSql2.get(i);
+			}
+
+			// for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
+			// dataSql += "('" + entry.getKey() + "'," + entry.getValue() +
+			// "),";
+			// flag = 1;
+			// }
 			// 去除多余的逗号
 			if (flag == 1) {
 				dataSql = dataSql.substring(0, dataSql.length() - 1);
@@ -260,7 +305,7 @@ public class PowerForecastCollerService {
 			e.printStackTrace();
 			return;
 		}
-		System.out.println("123");
+		System.out.println("短期预报功率sql:");
 		System.out.println(dataSql);
 		// 删除重复数据
 		shortForecHisMapper.deleteRepeatDataByTime(saveDataTime);
@@ -268,7 +313,6 @@ public class PowerForecastCollerService {
 		shortForecHisMapper.insertDataByStr(dataSql);
 	}
 
-	
 	/**
 	 * 录入超短期预报的历史数据方法
 	 */
@@ -304,7 +348,7 @@ public class PowerForecastCollerService {
 			calendar.add(Calendar.MINUTE, 14);
 		}
 		String endDate = df.format(new Date(calendar.getTimeInMillis()));
-		beginDate=endDate;
+		beginDate = endDate;
 		// 得到今日的所有辐照度信息
 		List<PhotoActData> pAD = photoActDataMapper.selectPhotoActDataByTime(
 				"'" + df2.format(new Date(calendar.getTimeInMillis())) + " 00:00:00'",
@@ -347,6 +391,7 @@ public class PowerForecastCollerService {
 			for (PhotovoltaicBp pbp : pbAll) {
 				eDingFaDianGongLv += pbp.getpCapacity();
 			}
+			eDingFaDianGongLv = eDingFaDianGongLv * 0.85;
 			if (eDingFaDianGongLv < yuBaoGongLvZuiDaZhi) {
 				double tempBiLi = eDingFaDianGongLv / yuBaoGongLvZuiDaZhi;
 				for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
@@ -417,6 +462,7 @@ public class PowerForecastCollerService {
 			for (PhotovoltaicBp pbp : pbAll) {
 				eDingFaDianGongLv += pbp.getpCapacity();
 			}
+			eDingFaDianGongLv = eDingFaDianGongLv * 0.85;
 			if (eDingFaDianGongLv < yuBaoGongLvZuiDaZhi) {
 				double tempBiLi = eDingFaDianGongLv / yuBaoGongLvZuiDaZhi;
 				for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
@@ -428,39 +474,38 @@ public class PowerForecastCollerService {
 
 			}
 
-		}	
+		}
 		List<ForecastDataRt> fCD = forecastDataRtMapper.selectForecastDataRtByTime("'" + beginDate + "'",
 				"'" + endDate + "'");
 		try {
 			System.out.println("123");
-			System.out.println(beginDate+"  "+endDate);
-			for(ForecastDataRt f:fCD){
+			System.out.println(beginDate + "  " + endDate);
+			for (ForecastDataRt f : fCD) {
 				System.out.println("456789");
 				System.out.println(f.getDataTime());
 			}
-			ForecastDataRt fcd=fCD.get(0);
-			SupershortForecHis sFH=new SupershortForecHis();
-			IdWorker id=new IdWorker();
-			for (Map.Entry<String, Double> entry : dataMap.entrySet()) { 
-				  System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
-				  sFH.setId(id.nextId("15"));
-				  sFH.setDataTime(df.parse(entry.getKey()));
-				  sFH.setInstRadiation(fcd.getTotalRadiation());
-				  sFH.setWindS(fcd.getWindS());
-				  sFH.setWindD(fcd.getWindD());
-				  sFH.setTem(fcd.getTem());
-				  sFH.setHumi(fcd.getHumi());
-				  sFH.setPress(fcd.getPress());
-				  sFH.setShortForec(entry.getValue());
-				  sFH.setEntryTime(new Date());
-				  supershortForecHisMapper.insert(sFH);
+			ForecastDataRt fcd = fCD.get(0);
+			SupershortForecHis sFH = new SupershortForecHis();
+			IdWorker id = new IdWorker();
+			for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
+				System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+				sFH.setId(id.nextId("15"));
+				sFH.setDataTime(df.parse(entry.getKey()));
+				sFH.setInstRadiation(fcd.getTotalRadiation());
+				sFH.setWindS(fcd.getWindS());
+				sFH.setWindD(fcd.getWindD());
+				sFH.setTem(fcd.getTem());
+				sFH.setHumi(fcd.getHumi());
+				sFH.setPress(fcd.getPress());
+				sFH.setShortForec(entry.getValue());
+				sFH.setEntryTime(new Date());
+				supershortForecHisMapper.insert(sFH);
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
@@ -501,7 +546,11 @@ public class PowerForecastCollerService {
 			calendar.add(Calendar.DAY_OF_MONTH, 2);
 			int flag = 0;
 			IdWorker id = new IdWorker();
-			Date nowDate=new Date();
+			Date nowDate = new Date();
+			Map<Integer, String> dataSql1 = new LinkedHashMap();
+			Map<Integer, String> dataSql2 = new LinkedHashMap();
+			Map<Integer, Double> dataSqlData = new LinkedHashMap();
+			int dataSqlFlag = 0;
 			while ((s = br.readLine()) != null) {
 				String[] arr = s.split("\\s+");
 				Date date = dataTimeFormat.parse(arr[0]);
@@ -511,24 +560,64 @@ public class PowerForecastCollerService {
 				// arr[8]);
 				// System.out.println(arr[0].substring(0, 8)+"
 				// "+dateFormat.format(new Date(calendar2.getTimeInMillis())));
-//				if (arr[0].substring(0, 8).equals(dateFormat.format(new Date(todayCal.getTimeInMillis())))) {
-					double tempGongLv=
-							Double.parseDouble(arr[1]) * Double.parseDouble(arr[1]) * cOP.getCoefficientOne()
-									+ Double.parseDouble(arr[1]) * Double.parseDouble(arr[6]) * cOP.getCoefficientTwo()
-									+ Double.parseDouble(arr[1]) * cOP.getCoefficientThree();
-					 dataSql += "("+id.nextId("15") +",'" + dataTimeFormat2.format(date) + "'," +
-					 arr[1] + "," + arr[4] + "," + arr[5] + ","
-					 + arr[6] + "," + arr[7] + "," + arr[8] + "," + tempGongLv +
-					 ",'" + dataTimeFormat4.format(nowDate) + "'),";
-					 flag = 1;
-//				}
+
+					double tempGongLv = Double.parseDouble(arr[1]) * Double.parseDouble(arr[1])
+							* cOP.getCoefficientOne()
+							+ Double.parseDouble(arr[1]) * Double.parseDouble(arr[6]) * cOP.getCoefficientTwo()
+							+ Double.parseDouble(arr[1]) * cOP.getCoefficientThree();
+					dataSqlData.put(dataSqlFlag, tempGongLv);
+					dataSql1.put(dataSqlFlag, "(" + id.nextId("15") + ",'" + dataTimeFormat2.format(date) + "',"
+							+ arr[1] + "," + arr[4] + "," + arr[5] + "," + arr[6] + "," + arr[7] + "," + arr[8] + ",");
+					dataSql2.put(dataSqlFlag, ",'" + dataTimeFormat4.format(nowDate) + "'),");
+					// dataSql += "(" + id.nextId("15") + ",'" +
+					// dataTimeFormat2.format(date) + "'," + arr[1] + ","
+					// + arr[4] + "," + arr[5] + "," + arr[6] + "," + arr[7] +
+					// "," + arr[8] + "," + tempGongLv
+					// + ",'" + dataTimeFormat4.format(nowDate) + "'),";
+					flag = 1;
+					dataSqlFlag++;
 
 			}
+			// 得到预报最大值
+			double yuBaoGongLvZuiDaZhi = 0;
+			for (Map.Entry<Integer, Double> entry : dataSqlData.entrySet()) {
+				// System.out.println("Key = " + entry.getKey() + ", Value = " +
+				// entry.getValue());
+				if (entry.getValue() < 0) {
+					dataSqlData.put(entry.getKey(), 0d);
+				}
+				if (yuBaoGongLvZuiDaZhi < entry.getValue()) {
+					yuBaoGongLvZuiDaZhi = entry.getValue();
+				}
+			}
 
-//			for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
-//				dataSql += "('" + entry.getKey() + "'," + entry.getValue() + "),";
-//				flag = 1;
-//			}
+			// 得到额定发电功率
+			List<PhotovoltaicBp> pbAll = photovoltaicBpMapper.queryAll();
+			double eDingFaDianGongLv = 0;
+			for (PhotovoltaicBp pbp : pbAll) {
+				eDingFaDianGongLv += pbp.getpCapacity();
+			}
+			eDingFaDianGongLv = eDingFaDianGongLv * 0.85;
+			if (eDingFaDianGongLv < yuBaoGongLvZuiDaZhi) {
+				double tempBiLi = eDingFaDianGongLv / yuBaoGongLvZuiDaZhi;
+				for (Map.Entry<Integer, Double> entry : dataSqlData.entrySet()) {
+					// System.out.println("Key = " + entry.getKey() + ", Value =
+					// " +
+					// entry.getValue());
+					dataSqlData.put(entry.getKey(), entry.getValue() * tempBiLi);
+				}
+
+			}
+			// 拼接字符串
+			for (int i = 0; i < dataSqlFlag; i++) {
+				dataSql += dataSql1.get(i) + dataSqlData.get(i) + dataSql2.get(i);
+			}
+
+			// for (Map.Entry<String, Double> entry : dataMap.entrySet()) {
+			// dataSql += "('" + entry.getKey() + "'," + entry.getValue() +
+			// "),";
+			// flag = 1;
+			// }
 			// 去除多余的逗号
 			if (flag == 1) {
 				dataSql = dataSql.substring(0, dataSql.length() - 1);
@@ -541,14 +630,13 @@ public class PowerForecastCollerService {
 			e.printStackTrace();
 			return;
 		}
-		System.out.println("3456");
+		System.out.println("短期预报功率sql:");
 		System.out.println(dataSql);
 		// 删除整个未来数据记录表数据
 		shortForecFutMapper.deleteAllData();
 		// 插入最新数据
 		shortForecFutMapper.insertDataByStr(dataSql);
-	
+
 	}
-	
-	
+
 }
