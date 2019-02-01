@@ -16,7 +16,7 @@ public class PowerQualiRateController {
 	PowerQualiRateCollerService powerQualiRateCollerService;
 
 	// 计算昨天的短期预报合格率
-	//@Scheduled(cron = "0 14 17 1/1 * ?  ")
+	@Scheduled(cron = "0 37 17 1/1 * ?  ")
 	public void CalShortQualiRateByYesterDay() {
 		// 格式化日期格式
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

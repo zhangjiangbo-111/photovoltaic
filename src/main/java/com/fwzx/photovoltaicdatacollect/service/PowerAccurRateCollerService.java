@@ -103,7 +103,7 @@ public class PowerAccurRateCollerService {
 		//double oneDayShortQuali=shortQuali/shortQualiNum*100.0;
 		double oneDayShortQuali=0;
 		if(shortQualiNum!=0){
-			oneDayShortQuali=1-shortQuali/(shortQualiNum*capacity);
+			oneDayShortQuali=(1-shortQuali/(shortQualiNum*capacity))*100.0;
 		}
 		System.out.println("准确率： "+oneDayShortQuali);
 		//提取数据，如果为空则新增数据
@@ -191,7 +191,7 @@ public class PowerAccurRateCollerService {
 		//计算一天的准确率
 		double oneDayShortQuali=0;
 		if(shortQualiNum!=0){
-			oneDayShortQuali=1-shortQuali/(shortQualiNum*capacity);
+			oneDayShortQuali=(1-shortQuali/(shortQualiNum*capacity))*100.0;
 		}
 		System.out.println("准确率： "+oneDayShortQuali);
 		//提取数据，如果为空则新增数据
