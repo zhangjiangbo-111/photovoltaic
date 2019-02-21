@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fwzx.photovoltaicdatacollect.dao.TblForcastMapper" >
+  <resultMap id="BaseResultMap" type="com.fwzx.photovoltaicdatacollect.pojo.TblForcast" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="datetime" property="datetime" jdbcType="TIMESTAMP" />
+    <result column="entrytime" property="entrytime" jdbcType="TIMESTAMP" />
+    <result column="station_id" property="stationId" jdbcType="VARCHAR" />
+    <result column="tem_max" property="temMax" jdbcType="DOUBLE" />
+    <result column="tem_min" property="temMin" jdbcType="DOUBLE" />
+    <result column="weather" property="weather" jdbcType="VARCHAR" />
+    <result column="wind_s" property="windS" jdbcType="VARCHAR" />
+    <result column="shici" property="shici" jdbcType="INTEGER" />
+    <result column="thour" property="thour" jdbcType="VARCHAR" />
+    <result column="wind_d" property="windD" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, datetime, entrytime, station_id, tem_max, tem_min, weather, wind_s, shici, thour, 
+    wind_d
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_forcast
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tbl_forcast
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblForcast" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
+      SELECT    UUID()
+    </selectKey>
+    insert into tbl_forcast (id, datetime, entrytime, 
+      station_id, tem_max, tem_min, 
+      weather, wind_s, shici, 
+      thour, wind_d)
+    values (#{id,jdbcType=VARCHAR}, #{datetime,jdbcType=TIMESTAMP}, #{entrytime,jdbcType=TIMESTAMP}, 
+      #{stationId,jdbcType=VARCHAR}, #{temMax,jdbcType=DOUBLE}, #{temMin,jdbcType=DOUBLE}, 
+      #{weather,jdbcType=VARCHAR}, #{windS,jdbcType=VARCHAR}, #{shici,jdbcType=INTEGER}, 
+      #{thour,jdbcType=VARCHAR}, #{windD,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblForcast" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
+      SELECT    UUID()
+    </selectKey>
+    insert into tbl_forcast
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      <if test="datetime != null" >
+        datetime,
+      </if>
+      <if test="entrytime != null" >
+        entrytime,
+      </if>
+      <if test="stationId != null" >
+        station_id,
+      </if>
+      <if test="temMax != null" >
+        tem_max,
+      </if>
+      <if test="temMin != null" >
+        tem_min,
+      </if>
+      <if test="weather != null" >
+        weather,
+      </if>
+      <if test="windS != null" >
+        wind_s,
+      </if>
+      <if test="shici != null" >
+        shici,
+      </if>
+      <if test="thour != null" >
+        thour,
+      </if>
+      <if test="windD != null" >
+        wind_d,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      <if test="datetime != null" >
+        #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="entrytime != null" >
+        #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="temMax != null" >
+        #{temMax,jdbcType=DOUBLE},
+      </if>
+      <if test="temMin != null" >
+        #{temMin,jdbcType=DOUBLE},
+      </if>
+      <if test="weather != null" >
+        #{weather,jdbcType=VARCHAR},
+      </if>
+      <if test="windS != null" >
+        #{windS,jdbcType=VARCHAR},
+      </if>
+      <if test="shici != null" >
+        #{shici,jdbcType=INTEGER},
+      </if>
+      <if test="thour != null" >
+        #{thour,jdbcType=VARCHAR},
+      </if>
+      <if test="windD != null" >
+        #{windD,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblForcast" >
+    update tbl_forcast
+    <set >
+      <if test="datetime != null" >
+        datetime = #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="entrytime != null" >
+        entrytime = #{entrytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stationId != null" >
+        station_id = #{stationId,jdbcType=VARCHAR},
+      </if>
+      <if test="temMax != null" >
+        tem_max = #{temMax,jdbcType=DOUBLE},
+      </if>
+      <if test="temMin != null" >
+        tem_min = #{temMin,jdbcType=DOUBLE},
+      </if>
+      <if test="weather != null" >
+        weather = #{weather,jdbcType=VARCHAR},
+      </if>
+      <if test="windS != null" >
+        wind_s = #{windS,jdbcType=VARCHAR},
+      </if>
+      <if test="shici != null" >
+        shici = #{shici,jdbcType=INTEGER},
+      </if>
+      <if test="thour != null" >
+        thour = #{thour,jdbcType=VARCHAR},
+      </if>
+      <if test="windD != null" >
+        wind_d = #{windD,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblForcast" >
+    update tbl_forcast
+    set datetime = #{datetime,jdbcType=TIMESTAMP},
+      entrytime = #{entrytime,jdbcType=TIMESTAMP},
+      station_id = #{stationId,jdbcType=VARCHAR},
+      tem_max = #{temMax,jdbcType=DOUBLE},
+      tem_min = #{temMin,jdbcType=DOUBLE},
+      weather = #{weather,jdbcType=VARCHAR},
+      wind_s = #{windS,jdbcType=VARCHAR},
+      shici = #{shici,jdbcType=INTEGER},
+      thour = #{thour,jdbcType=VARCHAR},
+      wind_d = #{windD,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

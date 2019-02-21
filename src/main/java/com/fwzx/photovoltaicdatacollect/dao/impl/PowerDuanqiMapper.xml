@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fwzx.photovoltaicdatacollect.dao.PowerDuanqiMapper" >
+  <resultMap id="BaseResultMap" type="com.fwzx.photovoltaicdatacollect.pojo.PowerDuanqi" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="staname" property="staname" jdbcType="VARCHAR" />
+    <result column="datetime" property="datetime" jdbcType="TIMESTAMP" />
+    <result column="shici" property="shici" jdbcType="INTEGER" />
+    <result column="tem" property="tem" jdbcType="DOUBLE" />
+    <result column="humi" property="humi" jdbcType="DOUBLE" />
+    <result column="winds" property="winds" jdbcType="DOUBLE" />
+    <result column="windd" property="windd" jdbcType="DOUBLE" />
+    <result column="pre" property="pre" jdbcType="DOUBLE" />
+    <result column="wea" property="wea" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, staname, datetime, shici, tem, humi, winds, windd, pre, wea
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from power_duanqi
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from power_duanqi
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fwzx.photovoltaicdatacollect.pojo.PowerDuanqi" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
+      SELECT    UUID()
+    </selectKey>
+    insert into power_duanqi (id, staname, datetime, 
+      shici, tem, humi, winds, 
+      windd, pre, wea)
+    values (#{id,jdbcType=VARCHAR}, #{staname,jdbcType=VARCHAR}, #{datetime,jdbcType=TIMESTAMP}, 
+      #{shici,jdbcType=INTEGER}, #{tem,jdbcType=DOUBLE}, #{humi,jdbcType=DOUBLE}, #{winds,jdbcType=DOUBLE}, 
+      #{windd,jdbcType=DOUBLE}, #{pre,jdbcType=DOUBLE}, #{wea,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.PowerDuanqi" >
+    <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
+      SELECT    UUID()
+    </selectKey>
+    insert into power_duanqi
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      <if test="staname != null" >
+        staname,
+      </if>
+      <if test="datetime != null" >
+        datetime,
+      </if>
+      <if test="shici != null" >
+        shici,
+      </if>
+      <if test="tem != null" >
+        tem,
+      </if>
+      <if test="humi != null" >
+        humi,
+      </if>
+      <if test="winds != null" >
+        winds,
+      </if>
+      <if test="windd != null" >
+        windd,
+      </if>
+      <if test="pre != null" >
+        pre,
+      </if>
+      <if test="wea != null" >
+        wea,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      <if test="staname != null" >
+        #{staname,jdbcType=VARCHAR},
+      </if>
+      <if test="datetime != null" >
+        #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shici != null" >
+        #{shici,jdbcType=INTEGER},
+      </if>
+      <if test="tem != null" >
+        #{tem,jdbcType=DOUBLE},
+      </if>
+      <if test="humi != null" >
+        #{humi,jdbcType=DOUBLE},
+      </if>
+      <if test="winds != null" >
+        #{winds,jdbcType=DOUBLE},
+      </if>
+      <if test="windd != null" >
+        #{windd,jdbcType=DOUBLE},
+      </if>
+      <if test="pre != null" >
+        #{pre,jdbcType=DOUBLE},
+      </if>
+      <if test="wea != null" >
+        #{wea,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.PowerDuanqi" >
+    update power_duanqi
+    <set >
+      <if test="staname != null" >
+        staname = #{staname,jdbcType=VARCHAR},
+      </if>
+      <if test="datetime != null" >
+        datetime = #{datetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shici != null" >
+        shici = #{shici,jdbcType=INTEGER},
+      </if>
+      <if test="tem != null" >
+        tem = #{tem,jdbcType=DOUBLE},
+      </if>
+      <if test="humi != null" >
+        humi = #{humi,jdbcType=DOUBLE},
+      </if>
+      <if test="winds != null" >
+        winds = #{winds,jdbcType=DOUBLE},
+      </if>
+      <if test="windd != null" >
+        windd = #{windd,jdbcType=DOUBLE},
+      </if>
+      <if test="pre != null" >
+        pre = #{pre,jdbcType=DOUBLE},
+      </if>
+      <if test="wea != null" >
+        wea = #{wea,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fwzx.photovoltaicdatacollect.pojo.PowerDuanqi" >
+    update power_duanqi
+    set staname = #{staname,jdbcType=VARCHAR},
+      datetime = #{datetime,jdbcType=TIMESTAMP},
+      shici = #{shici,jdbcType=INTEGER},
+      tem = #{tem,jdbcType=DOUBLE},
+      humi = #{humi,jdbcType=DOUBLE},
+      winds = #{winds,jdbcType=DOUBLE},
+      windd = #{windd,jdbcType=DOUBLE},
+      pre = #{pre,jdbcType=DOUBLE},
+      wea = #{wea,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

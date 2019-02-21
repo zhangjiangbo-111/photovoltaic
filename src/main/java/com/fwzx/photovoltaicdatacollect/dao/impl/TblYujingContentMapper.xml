@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fwzx.photovoltaicdatacollect.dao.TblYujingContentMapper" >
+  <resultMap id="BaseResultMap" type="com.fwzx.photovoltaicdatacollect.pojo.TblYujingContent" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="publish_date" property="publishDate" jdbcType="TIMESTAMP" />
+    <result column="yujing_type" property="yujingType" jdbcType="VARCHAR" />
+    <result column="yujing_level" property="yujingLevel" jdbcType="VARCHAR" />
+    <result column="yujing_content" property="yujingContent" jdbcType="VARCHAR" />
+    <result column="yujing_date" property="yujingDate" jdbcType="TIMESTAMP" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="publish_location" property="publishLocation" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="publish_person" property="publishPerson" jdbcType="VARCHAR" />
+    <result column="remove_time" property="removeTime" jdbcType="TIMESTAMP" />
+    <result column="remove_content" property="removeContent" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, publish_date, yujing_type, yujing_level, yujing_content, yujing_date, sign, publish_location, 
+    flag, publish_person, remove_time, remove_content, createtime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_yujing_content
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tbl_yujing_content
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblYujingContent" >
+    insert into tbl_yujing_content (id, publish_date, yujing_type,
+      yujing_level, yujing_content, yujing_date, 
+      sign, publish_location, flag, 
+      publish_person, remove_time, remove_content, 
+      createtime)
+    values (#{id,jdbcType=VARCHAR}, #{publishDate,jdbcType=TIMESTAMP}, #{yujingType,jdbcType=VARCHAR}, 
+      #{yujingLevel,jdbcType=VARCHAR}, #{yujingContent,jdbcType=VARCHAR}, #{yujingDate,jdbcType=TIMESTAMP}, 
+      #{sign,jdbcType=VARCHAR}, #{publishLocation,jdbcType=VARCHAR}, #{flag,jdbcType=VARCHAR}, 
+      #{publishPerson,jdbcType=VARCHAR}, #{removeTime,jdbcType=TIMESTAMP}, #{removeContent,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblYujingContent" >
+    insert into tbl_yujing_content
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      <if test="publishDate != null" >
+        publish_date,
+      </if>
+      <if test="yujingType != null" >
+        yujing_type,
+      </if>
+      <if test="yujingLevel != null" >
+        yujing_level,
+      </if>
+      <if test="yujingContent != null" >
+        yujing_content,
+      </if>
+      <if test="yujingDate != null" >
+        yujing_date,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
+      <if test="publishLocation != null" >
+        publish_location,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+      <if test="publishPerson != null" >
+        publish_person,
+      </if>
+      <if test="removeTime != null" >
+        remove_time,
+      </if>
+      <if test="removeContent != null" >
+        remove_content,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      <if test="publishDate != null" >
+        #{publishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yujingType != null" >
+        #{yujingType,jdbcType=VARCHAR},
+      </if>
+      <if test="yujingLevel != null" >
+        #{yujingLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="yujingContent != null" >
+        #{yujingContent,jdbcType=VARCHAR},
+      </if>
+      <if test="yujingDate != null" >
+        #{yujingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sign != null" >
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="publishLocation != null" >
+        #{publishLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="publishPerson != null" >
+        #{publishPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="removeTime != null" >
+        #{removeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="removeContent != null" >
+        #{removeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblYujingContent" >
+    update tbl_yujing_content
+    <set >
+      <if test="publishDate != null" >
+        publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yujingType != null" >
+        yujing_type = #{yujingType,jdbcType=VARCHAR},
+      </if>
+      <if test="yujingLevel != null" >
+        yujing_level = #{yujingLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="yujingContent != null" >
+        yujing_content = #{yujingContent,jdbcType=VARCHAR},
+      </if>
+      <if test="yujingDate != null" >
+        yujing_date = #{yujingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="publishLocation != null" >
+        publish_location = #{publishLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="publishPerson != null" >
+        publish_person = #{publishPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="removeTime != null" >
+        remove_time = #{removeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="removeContent != null" >
+        remove_content = #{removeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fwzx.photovoltaicdatacollect.pojo.TblYujingContent" >
+    update tbl_yujing_content
+    set publish_date = #{publishDate,jdbcType=TIMESTAMP},
+      yujing_type = #{yujingType,jdbcType=VARCHAR},
+      yujing_level = #{yujingLevel,jdbcType=VARCHAR},
+      yujing_content = #{yujingContent,jdbcType=VARCHAR},
+      yujing_date = #{yujingDate,jdbcType=TIMESTAMP},
+      sign = #{sign,jdbcType=VARCHAR},
+      publish_location = #{publishLocation,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      publish_person = #{publishPerson,jdbcType=VARCHAR},
+      remove_time = #{removeTime,jdbcType=TIMESTAMP},
+      remove_content = #{removeContent,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
