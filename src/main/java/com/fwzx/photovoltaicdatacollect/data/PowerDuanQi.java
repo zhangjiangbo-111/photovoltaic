@@ -32,11 +32,11 @@ public class PowerDuanQi {
 	@Scheduled(cron = "0 37 17 1/1 * ?")
 	public void run() {
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		String ftpAddress = "";
-		String ftpPath = "";
+		String ftpAddress = "10.48.17.98";
+		String ftpPath = "/glyc/duanqi/";
 		Integer ftpPort = 21;
-		String ftpPwd = "";
-		String ftpUsername = "";
+		String ftpPwd = "test@2018";
+		String ftpUsername = "test";
 		String localpath = "d://powerduanqi/";
 		File file = new File(localpath);
 		if (!file.exists()) {
