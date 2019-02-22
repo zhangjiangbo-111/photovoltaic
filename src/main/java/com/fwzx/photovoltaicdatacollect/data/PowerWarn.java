@@ -31,7 +31,7 @@ public class PowerWarn {
 	@Autowired
 	private TblYujingContentMapper mapper;
 
-	@Scheduled(cron = "0 37 17 1/1 * ?")
+	@Scheduled(cron = "0 3/10 * * * ?")
 	public void run() {
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmm");
 		String ftpAddress = "10.48.17.98";
