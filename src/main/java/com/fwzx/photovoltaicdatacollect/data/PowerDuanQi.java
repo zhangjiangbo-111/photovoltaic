@@ -74,7 +74,7 @@ public class PowerDuanQi {
 				String line = null;
 				while ((line = br.readLine()) != null) {
 					String[] split = line.split(",");
-					PowerDuanqi duanqi  =new PowerDuanqi();
+					PowerDuanqi duanqi = new PowerDuanqi();
 					duanqi.setStaname(split[0]);
 					duanqi.setDatetime(format.parse(split[1]));
 					duanqi.setShici(Integer.parseInt(split[2]));
@@ -83,9 +83,10 @@ public class PowerDuanQi {
 					duanqi.setWinds(Double.parseDouble(split[5]));
 					duanqi.setWindd(Double.parseDouble(split[6]));
 					duanqi.setPre(Double.parseDouble(split[7]));
-					if(split[8]!=" "){
+					if (split[8] != " ") {
 						duanqi.setWea(split[8]);
 					}
+					duanqi.setThour(split[9]);
 					mapper.insertSelective(duanqi);
 				}
 

@@ -12,9 +12,10 @@
     <result column="windd" property="windd" jdbcType="DOUBLE" />
     <result column="pre" property="pre" jdbcType="DOUBLE" />
     <result column="wea" property="wea" jdbcType="VARCHAR" />
+    <result column="thour" property="thour" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, staname, datetime, shici, tem, humi, winds, windd, pre, wea
+    id, staname, datetime, shici, tem, humi, winds, windd, pre, wea, thour
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -32,10 +33,12 @@
     </selectKey>
     insert into power_duanqi (id, staname, datetime, 
       shici, tem, humi, winds, 
-      windd, pre, wea)
+      windd, pre, wea, thour
+      )
     values (#{id,jdbcType=VARCHAR}, #{staname,jdbcType=VARCHAR}, #{datetime,jdbcType=TIMESTAMP}, 
       #{shici,jdbcType=INTEGER}, #{tem,jdbcType=DOUBLE}, #{humi,jdbcType=DOUBLE}, #{winds,jdbcType=DOUBLE}, 
-      #{windd,jdbcType=DOUBLE}, #{pre,jdbcType=DOUBLE}, #{wea,jdbcType=VARCHAR})
+      #{windd,jdbcType=DOUBLE}, #{pre,jdbcType=DOUBLE}, #{wea,jdbcType=VARCHAR}, #{thour,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.fwzx.photovoltaicdatacollect.pojo.PowerDuanqi" >
     <selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE" >
@@ -71,6 +74,9 @@
       <if test="wea != null" >
         wea,
       </if>
+      <if test="thour != null" >
+        thour,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       #{id,jdbcType=VARCHAR},
@@ -100,6 +106,9 @@
       </if>
       <if test="wea != null" >
         #{wea,jdbcType=VARCHAR},
+      </if>
+      <if test="thour != null" >
+        #{thour,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -133,6 +142,9 @@
       <if test="wea != null" >
         wea = #{wea,jdbcType=VARCHAR},
       </if>
+      <if test="thour != null" >
+        thour = #{thour,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -146,7 +158,8 @@
       winds = #{winds,jdbcType=DOUBLE},
       windd = #{windd,jdbcType=DOUBLE},
       pre = #{pre,jdbcType=DOUBLE},
-      wea = #{wea,jdbcType=VARCHAR}
+      wea = #{wea,jdbcType=VARCHAR},
+      thour = #{thour,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

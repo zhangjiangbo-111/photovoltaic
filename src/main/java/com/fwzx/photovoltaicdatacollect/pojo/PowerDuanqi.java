@@ -23,6 +23,8 @@ public class PowerDuanqi {
 
     private String wea;
 
+    private String thour;
+
     public String getId() {
         return id;
     }
@@ -101,5 +103,13 @@ public class PowerDuanqi {
 
     public void setWea(String wea) {
         this.wea = wea == null ? null : wea.trim();
+    }
+
+    public String getThour() {
+        return thour;
+    }
+
+    public void setThour(String thour) {
+        this.thour = thour;
     }
 }
